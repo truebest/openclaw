@@ -87,6 +87,36 @@ describe("Fluxer inbound access", () => {
     ).resolves.toMatchObject({ shouldDispatch: true, isDirect: true });
   });
 
+  it("treats Fluxer numeric DM channel types as direct messages", async () => {
+    const cfg = {} satisfies CoreConfig;
+
+    await expect(
+      resolveFluxerInboundAccess({
+        account: createAccount({ dmPolicy: "open", allowFrom: ["*"] }),
+        config: cfg,
+        message: createMessage({
+          guild_id: undefined,
+          channel_type: 1,
+          content: "hello without mention",
+          author: { id: "user-1" },
+        }),
+      }),
+    ).resolves.toMatchObject({ shouldDispatch: true, isDirect: true });
+
+    await expect(
+      resolveFluxerInboundAccess({
+        account: createAccount({ dmPolicy: "open", allowFrom: ["*"] }),
+        config: cfg,
+        message: createMessage({
+          guild_id: undefined,
+          channel_type: 3,
+          content: "group dm without mention",
+          author: { id: "user-1" },
+        }),
+      }),
+    ).resolves.toMatchObject({ shouldDispatch: true, isDirect: true });
+  });
+
   it("requires bot mention in open group channels by default", async () => {
     const cfg = {} satisfies CoreConfig;
     const account = createAccount({ groupPolicy: "open", botUserId: "bot-1" });

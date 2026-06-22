@@ -3,8 +3,11 @@
  */
 import type { FluxerMessage, FluxerUser } from "./types.js";
 
-const DIRECT_CHANNEL_TYPES = new Set(["dm", "direct", "private", "group_dm"]);
+// Fluxer follows Discord-like numeric channel types for core channel shapes:
+// 1 = DM, 3 = group DM. Gateway payloads may expose either strings or numbers.
+const DIRECT_CHANNEL_TYPES = new Set(["1", "3", "dm", "direct", "private", "group_dm"]);
 const GROUP_CHANNEL_TYPES = new Set([
+  "0",
   "text",
   "channel",
   "group",
