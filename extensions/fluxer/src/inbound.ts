@@ -12,7 +12,6 @@ import { resolveFluxerInboundAccess, type FluxerInboundAccess } from "./access.j
 import {
   fluxerMessageAuthorId,
   fluxerMessageContent,
-  fluxerMessageMentionedUserIds,
   fluxerMessageSenderName,
   isFluxerDirectMessage,
 } from "./message.js";
@@ -97,25 +96,6 @@ function shouldDispatchFluxerInbound(params: {
   );
 }
 
-function shouldSuppressVisibleReplyForOtherMention(params: {
-  access: FluxerInboundAccess;
-  message: FluxerMessage;
-  botUserId?: string | null;
-}): boolean {
-  if (params.access.isDirect || params.access.wasMentioned === true) {
-    return false;
-  }
-  const mentionedUserIds = fluxerMessageMentionedUserIds(params.message);
-  if (mentionedUserIds.length === 0) {
-    return false;
-  }
-  const botUserId = params.botUserId?.trim();
-  if (!botUserId) {
-    return true;
-  }
-  return !mentionedUserIds.includes(botUserId);
-}
-
 /**
  * Dispatches one already-fetched Fluxer message through the configured account.
  */
@@ -152,11 +132,6 @@ export async function handleFluxerInbound(params: {
   if (!shouldDispatchFluxerInbound({ access, inboundEventKind })) {
     return;
   }
-  const suppressVisibleReply = shouldSuppressVisibleReplyForOtherMention({
-    access,
-    message,
-    botUserId: params.botUserId,
-  });
   const senderName = fluxerMessageSenderName(message);
   const content = fluxerMessageContent(message);
   const previousTimestamp = runtime.channel.session.readSessionUpdatedAt({
@@ -217,9 +192,6 @@ export async function handleFluxerInbound(params: {
       runtime.channel.reply.dispatchReplyWithBufferedBlockDispatcher,
     delivery: {
       deliver: async (payload) => {
-        if (suppressVisibleReply) {
-          return;
-        }
         const text =
           payload && typeof payload === "object" && "text" in payload
             ? ((payload as { text?: string }).text ?? "")
