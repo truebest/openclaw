@@ -1,0 +1,108 @@
+name: openclaw-multi-instance
+
+x-openclaw-common: &openclaw-common
+  image: ${OPENCLAW_IMAGE:-openclaw:fluxer-local}
+  build:
+    context: ../..
+    dockerfile: Dockerfile
+  init: true
+  restart: unless-stopped
+  cap_drop:
+    - NET_RAW
+    - NET_ADMIN
+  security_opt:
+    - no-new-privileges:true
+  extra_hosts:
+    - "host.docker.internal:host-gateway"
+  networks:
+    - openclaw-internal
+  environment:
+    HOME: /home/node
+    OPENCLAW_HOME: /home/node
+    OPENCLAW_STATE_DIR: /home/node/.openclaw
+    OPENCLAW_CONFIG_PATH: /home/node/.openclaw/openclaw.json
+    OPENCLAW_CONFIG_DIR: /home/node/.openclaw
+    OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
+    OPENCLAW_DISABLE_BONJOUR: "1"
+    TERM: xterm-256color
+    TZ: ${OPENCLAW_TZ:-UTC}
+  expose:
+    - "18789"
+  command:
+    [
+      "node",
+      "dist/index.js",
+      "gateway",
+      "--bind",
+      "lan",
+      "--port",
+      "18789",
+    ]
+  healthcheck:
+    test:
+      [
+        "CMD",
+        "node",
+        "-e",
+        "fetch('http://127.0.0.1:18789/healthz').then((r)=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))",
+      ]
+    interval: 30s
+    timeout: 5s
+    retries: 5
+    start_period: 20s
+
+x-openclaw-worker: &openclaw-worker
+  <<: *openclaw-common
+  depends_on:
+    llm-hub:
+      condition: service_healthy
+
+services:
+  llm-hub:
+    <<: *openclaw-common
+    env_file:
+      - path: ${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/llm-hub/instance.env
+        required: false
+    volumes:
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/llm-hub/state:/home/node/.openclaw"
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/llm-hub/workspace:/home/node/.openclaw/workspace"
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/llm-hub/auth-profile-secrets:/home/node/.config/openclaw"
+
+  pablo-0:
+    <<: *openclaw-worker
+    container_name: pablo-0
+    env_file:
+      - path: ${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-0/instance.env
+        required: false
+    volumes:
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-0/state:/home/node/.openclaw"
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-0/workspace:/home/node/.openclaw/workspace"
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-0/auth-profile-secrets:/home/node/.config/openclaw"
+
+  pablo-1:
+    <<: *openclaw-worker
+    container_name: pablo-1
+    profiles: ["extra-workers"]
+    env_file:
+      - path: ${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-1/instance.env
+        required: false
+    volumes:
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-1/state:/home/node/.openclaw"
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-1/workspace:/home/node/.openclaw/workspace"
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-1/auth-profile-secrets:/home/node/.config/openclaw"
+
+  pablo-2:
+    <<: *openclaw-worker
+    container_name: pablo-2
+    profiles: ["extra-workers"]
+    env_file:
+      - path: ${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-2/instance.env
+        required: false
+    volumes:
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-2/state:/home/node/.openclaw"
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-2/workspace:/home/node/.openclaw/workspace"
+      - "${OPENCLAW_MULTI_INSTANCE_DIR:-${HOME:-/tmp}/.openclaw-instances}/pablo-2/auth-profile-secrets:/home/node/.config/openclaw"
+
+networks:
+  openclaw-internal:
+    driver: bridge

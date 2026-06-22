@@ -1058,6 +1058,7 @@
                   "install/bun",
                   "install/clawdock",
                   "install/docker",
+                  "install/docker-multi-instance",
                   "install/nix",
                   "install/podman"
                 ]
@@ -1119,6 +1120,7 @@
                 "group": "Developer and self-hosted",
                 "pages": [
                   "channels/irc",
+                  "channels/fluxer",
                   "channels/mattermost",
                   "channels/nextcloud-talk",
                   "channels/nostr",
