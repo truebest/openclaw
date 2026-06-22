@@ -191,7 +191,10 @@ describe("handleFluxerInbound", () => {
     });
 
     const dispatchReply = vi.mocked(runtime.channel.inbound.dispatchReply);
-    await dispatchReply.mock.calls[0]?.[0].delivery.deliver({ text: "right bot reply" });
+    await dispatchReply.mock.calls[0]?.[0].delivery.deliver(
+      { text: "right bot reply" },
+      { kind: "final" },
+    );
 
     expect(sendFluxerTextMock).toHaveBeenCalledWith(
       expect.objectContaining({

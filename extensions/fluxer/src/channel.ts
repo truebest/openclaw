@@ -28,6 +28,7 @@ import { fluxerConfigSchema } from "./config-schema.js";
 import { startFluxerGatewayAccount } from "./gateway.js";
 import { resolveFluxerGroupRequireMention, resolveFluxerGroupToolPolicy } from "./group-policy.js";
 import { FLUXER_MESSAGE_CONTENT_LIMIT } from "./limits.js";
+import { fluxerMessageActions } from "./message-actions.js";
 import { sendFluxerText } from "./outbound.js";
 import {
   buildFluxerTarget,
@@ -175,6 +176,7 @@ export const fluxerPlugin: ChannelPlugin<ResolvedFluxerAccount> = createChatChan
     gateway: {
       startAccount: startFluxerGatewayAccount,
     },
+    actions: fluxerMessageActions,
     message: fluxerMessageAdapter,
   },
   outbound: {

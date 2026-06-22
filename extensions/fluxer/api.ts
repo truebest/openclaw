@@ -18,6 +18,7 @@ export {
 } from "./src/gateway.js";
 export { createFluxerClient, normalizeFluxerApiBaseUrl } from "./src/http-client.js";
 export { FLUXER_MESSAGE_CONTENT_LIMIT } from "./src/limits.js";
+export { fluxerMessageActions } from "./src/message-actions.js";
 export { getFluxerRuntime, setFluxerRuntime } from "./src/runtime.js";
 export { sendFluxerText } from "./src/outbound.js";
 export {

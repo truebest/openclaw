@@ -151,6 +151,16 @@ openclaw message send --channel fluxer --target 123456789 --message "hello"
 openclaw message send --channel fluxer --target dm:987654321 --message "hello"
 ```
 
+Agents can also send visible Fluxer replies through the shared message tool:
+
+```text
+message(action="send", channel="fluxer", target="channel:123456789", message="hello")
+message(action="send", channel="fluxer", target="dm:987654321", message="hello")
+```
+
+When a Fluxer message is the current source conversation, `target` may be
+omitted and OpenClaw sends back to that Fluxer conversation.
+
 Replies from inbound messages include Fluxer's `message_reference` so the server
 can associate the OpenClaw response with the triggering message. Long text is
 split into Fluxer-sized message chunks before sending.

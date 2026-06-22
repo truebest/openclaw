@@ -8,6 +8,7 @@ export {
   type FluxerTarget,
   type ResolvedFluxerAccount,
   createFluxerClient,
+  fluxerMessageActions,
   parseFluxerTarget,
   resolveFluxerAccount,
   setFluxerRuntime,
