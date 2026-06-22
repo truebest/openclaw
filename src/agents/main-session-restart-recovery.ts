@@ -52,6 +52,7 @@ const log = createSubsystemLogger("main-session-restart-recovery");
 const DEFAULT_RECOVERY_DELAY_MS = 5_000;
 const MAX_RECOVERY_RETRIES = 3;
 const RETRY_BACKOFF_MULTIPLIER = 2;
+const DISABLE_MAIN_SESSION_RESTART_RECOVERY_ENV = "OPENCLAW_DISABLE_MAIN_SESSION_RESTART_RECOVERY";
 const UNRESUMABLE_SESSION_NOTICE =
   "I was interrupted by a gateway restart and couldn't safely resume the previous turn. " +
   "Please send that last request again and I'll pick it up cleanly.";
@@ -949,6 +950,12 @@ export function scheduleRestartAbortedMainSessionRecovery(
     stateDir?: string;
   } = {},
 ): void {
+  if (process.env[DISABLE_MAIN_SESSION_RESTART_RECOVERY_ENV] === "1") {
+    log.info(
+      `main-session restart recovery disabled by ${DISABLE_MAIN_SESSION_RESTART_RECOVERY_ENV}`,
+    );
+    return;
+  }
   const initialDelay = params.delayMs ?? DEFAULT_RECOVERY_DELAY_MS;
   const maxRetries = params.maxRetries ?? MAX_RECOVERY_RETRIES;
   const resumedSessionKeys = new Set<string>();

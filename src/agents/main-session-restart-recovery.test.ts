@@ -24,6 +24,7 @@ import {
   markStartupOrphanedMainSessionsForRecovery,
   recoverStartupOrphanedMainSessions,
   recoverRestartAbortedMainSessions,
+  scheduleRestartAbortedMainSessionRecovery,
 } from "./main-session-restart-recovery.js";
 import type { SessionLockInspection } from "./session-write-lock.js";
 
@@ -1318,5 +1319,23 @@ describe("main-session-restart-recovery", () => {
     const store = loadSessionStore(path.join(sessionsDir, "sessions.json"));
     expect(store["agent:main:demo-channel:room-1"]?.status).toBe("failed");
     expect(store["agent:main:demo-channel:room-1"]?.abortedLastRun).toBe(true);
+  });
+
+  it("does not schedule startup recovery when disabled by env", () => {
+    const previous = process.env.OPENCLAW_DISABLE_MAIN_SESSION_RESTART_RECOVERY;
+    const setTimeoutSpy = vi.spyOn(globalThis, "setTimeout");
+    process.env.OPENCLAW_DISABLE_MAIN_SESSION_RESTART_RECOVERY = "1";
+    try {
+      scheduleRestartAbortedMainSessionRecovery({ stateDir: tmpDir, delayMs: 1 });
+
+      expect(setTimeoutSpy).not.toHaveBeenCalled();
+    } finally {
+      setTimeoutSpy.mockRestore();
+      if (previous === undefined) {
+        delete process.env.OPENCLAW_DISABLE_MAIN_SESSION_RESTART_RECOVERY;
+      } else {
+        process.env.OPENCLAW_DISABLE_MAIN_SESSION_RESTART_RECOVERY = previous;
+      }
+    }
   });
 });

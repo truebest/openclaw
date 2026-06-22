@@ -24,6 +24,7 @@ x-openclaw-common: &openclaw-common
     OPENCLAW_CONFIG_DIR: /home/node/.openclaw
     OPENCLAW_WORKSPACE_DIR: /home/node/.openclaw/workspace
     OPENCLAW_DISABLE_BONJOUR: "1"
+    OPENCLAW_DISABLE_MAIN_SESSION_RESTART_RECOVERY: "1"
     TERM: xterm-256color
     TZ: ${OPENCLAW_TZ:-UTC}
   expose:
