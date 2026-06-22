@@ -1,0 +1,50 @@
+{
+  "name": "@openclaw/fluxer",
+  "version": "2026.6.8",
+  "private": true,
+  "description": "OpenClaw Fluxer channel plugin",
+  "type": "module",
+  "exports": {
+    ".": "./index.ts",
+    "./api.js": "./api.ts",
+    "./runtime-api.js": "./runtime-api.ts"
+  },
+  "dependencies": {
+    "ws": "8.21.0",
+    "zod": "4.4.3"
+  },
+  "devDependencies": {
+    "@openclaw/plugin-sdk": "workspace:*",
+    "openclaw": "2026.5.28"
+  },
+  "peerDependencies": {
+    "openclaw": ">=2026.6.8"
+  },
+  "peerDependenciesMeta": {
+    "openclaw": {
+      "optional": true
+    }
+  },
+  "openclaw": {
+    "extensions": [
+      "./index.ts"
+    ],
+    "channel": {
+      "id": "fluxer",
+      "label": "Fluxer",
+      "selectionLabel": "Fluxer",
+      "detailLabel": "Fluxer Bot",
+      "docsPath": "/channels/fluxer",
+      "docsLabel": "fluxer",
+      "blurb": "self-hosted Fluxer chat via bot tokens.",
+      "systemImage": "bubble.left.and.bubble.right",
+      "markdownCapable": true,
+      "preferSessionLookupForAnnounceTarget": true,
+      "order": 86,
+      "commands": {
+        "nativeCommandsAutoEnabled": false,
+        "nativeSkillsAutoEnabled": false
+      }
+    }
+  }
+}

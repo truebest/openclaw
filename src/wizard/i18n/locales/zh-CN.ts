@@ -842,6 +842,7 @@ export const zh_CN = {
         clickclack: "通过一等 ClickClack bot token 连接自托管聊天。",
         discord: "目前支持很完善。",
         feishu: "飞书/Lark 企业消息。",
+        fluxer: "通过 bot token 连接自托管 Fluxer 聊天。",
         googlechat: "通过 HTTP webhook 接入 Google Workspace Chat app。",
         imessage: "通过 imsg bridge 本地接入 iMessage/SMS；启用后支持私有 API 消息动作。",
         irc: "经典 IRC 网络，支持 DM/频道路由和配对控制。",

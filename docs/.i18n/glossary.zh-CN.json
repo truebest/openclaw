@@ -260,6 +260,10 @@
     "target": "ClickClack"
   },
   {
+    "source": "Fluxer",
+    "target": "Fluxer"
+  },
+  {
     "source": "IRC",
     "target": "IRC"
   },

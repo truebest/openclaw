@@ -843,6 +843,7 @@ export const zh_TW = {
         clickclack: "透過一等 ClickClack bot token 連接自託管聊天。",
         discord: "目前支援很完善。",
         feishu: "飛書/Lark 企業訊息。",
+        fluxer: "透過 bot token 連接自託管 Fluxer 聊天。",
         googlechat: "透過 HTTP webhook 接入 Google Workspace Chat app。",
         imessage: "透過 imsg bridge 本機接入 iMessage/SMS；啟用後支援私有 API 訊息動作。",
         irc: "經典 IRC 網路，支援 DM/頻道路由和配對控制。",

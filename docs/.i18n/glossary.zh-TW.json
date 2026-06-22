@@ -16,6 +16,10 @@
     "target": "ClickClack"
   },
   {
+    "source": "Fluxer",
+    "target": "Fluxer"
+  },
+  {
     "source": "CLI",
     "target": "命令列介面"
   },

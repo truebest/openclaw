@@ -1,0 +1,15 @@
+{
+  "id": "fluxer",
+  "activation": {
+    "onStartup": false
+  },
+  "channels": ["fluxer"],
+  "channelEnvVars": {
+    "fluxer": ["FLUXER_BOT_TOKEN"]
+  },
+  "configSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {}
+  }
+}

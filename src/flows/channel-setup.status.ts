@@ -60,6 +60,7 @@ const CHANNEL_PRIMER_BLURB_KEYS: Record<string, string> = {
   clickclack: "wizard.channelsPrimer.blurbs.clickclack",
   discord: "wizard.channelsPrimer.blurbs.discord",
   feishu: "wizard.channelsPrimer.blurbs.feishu",
+  fluxer: "wizard.channelsPrimer.blurbs.fluxer",
   googlechat: "wizard.channelsPrimer.blurbs.googlechat",
   imessage: "wizard.channelsPrimer.blurbs.imessage",
   irc: "wizard.channelsPrimer.blurbs.irc",

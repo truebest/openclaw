@@ -3,6 +3,7 @@
   "dist/extensions/canvas/runtime-api.js",
   "dist/extensions/clickclack/runtime-api.js",
   "dist/extensions/copilot-proxy/runtime-api.js",
+  "dist/extensions/fluxer/runtime-api.js",
   "dist/extensions/google/runtime-api.js",
   "dist/extensions/imessage/runtime-api.js",
   "dist/extensions/irc/runtime-api.js",
