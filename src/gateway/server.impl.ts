@@ -508,6 +508,11 @@ export type GatewayServerOptions = {
    */
   openResponsesEnabled?: boolean;
   /**
+   * If false, do not serve the internal raw model proxy under `/llm/v1`.
+   * Default: config `gateway.http.endpoints.modelProxy.enabled` (or false when absent).
+   */
+  modelProxyEnabled?: boolean;
+  /**
    * Override gateway auth configuration (merges with config).
    */
   auth?: import("../config/config.js").GatewayAuthConfig;
@@ -758,6 +763,7 @@ export async function startGatewayServer(
       controlUiEnabled: opts.controlUiEnabled,
       openAiChatCompletionsEnabled: opts.openAiChatCompletionsEnabled,
       openResponsesEnabled: opts.openResponsesEnabled,
+      modelProxyEnabled: opts.modelProxyEnabled,
       auth: opts.auth,
       tailscale: opts.tailscale,
     });
@@ -769,6 +775,8 @@ export async function startGatewayServer(
     openAiChatCompletionsConfig,
     openResponsesEnabled,
     openResponsesConfig,
+    modelProxyEnabled,
+    modelProxyConfig,
     strictTransportSecurityHeader,
     controlUiBasePath,
     controlUiRoot: controlUiRootOverride,
@@ -916,6 +924,8 @@ export async function startGatewayServer(
       openAiChatCompletionsConfig,
       openResponsesEnabled,
       openResponsesConfig,
+      modelProxyEnabled,
+      modelProxyConfig,
       strictTransportSecurityHeader,
       resolvedAuth,
       rateLimiter: authRateLimiter,

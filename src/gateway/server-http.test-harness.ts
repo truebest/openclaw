@@ -155,6 +155,7 @@ export function createTestGatewayServer(options: {
     controlUiBasePath: "/__control__",
     openAiChatCompletionsEnabled: false,
     openResponsesEnabled: false,
+    modelProxyEnabled: false,
     handleHooksRequest: async () => false,
     ...options.overrides,
     resolvedAuth: options.resolvedAuth,

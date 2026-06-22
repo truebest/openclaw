@@ -76,6 +76,7 @@ let managedImageAttachmentsModulePromise:
   | Promise<typeof import("./managed-image-attachments.js")>
   | undefined;
 let modelsHttpModulePromise: Promise<typeof import("./models-http.js")> | undefined;
+let modelProxyHttpModulePromise: Promise<typeof import("./model-proxy-http.js")> | undefined;
 let openAiHttpModulePromise: Promise<typeof import("./openai-http.js")> | undefined;
 let openResponsesHttpModulePromise: Promise<typeof import("./openresponses-http.js")> | undefined;
 let sessionHistoryHttpModulePromise:
@@ -114,6 +115,11 @@ function getManagedImageAttachmentsModule() {
 function getModelsHttpModule() {
   modelsHttpModulePromise ??= import("./models-http.js");
   return modelsHttpModulePromise;
+}
+
+function getModelProxyHttpModule() {
+  modelProxyHttpModulePromise ??= import("./model-proxy-http.js");
+  return modelProxyHttpModulePromise;
 }
 
 function getOpenAiHttpModule() {
@@ -215,6 +221,10 @@ function isOpenAiChatCompletionsPath(pathname: string): boolean {
 
 function isOpenResponsesPath(pathname: string): boolean {
   return pathname === "/v1/responses";
+}
+
+function isModelProxyChatCompletionsPath(pathname: string): boolean {
+  return pathname === "/llm/v1/chat/completions";
 }
 
 function isToolsInvokePath(pathname: string): boolean {
@@ -489,6 +499,8 @@ export function createGatewayHttpServer(opts: {
   openAiChatCompletionsConfig?: import("../config/types.gateway.js").GatewayHttpChatCompletionsConfig;
   openResponsesEnabled: boolean;
   openResponsesConfig?: import("../config/types.gateway.js").GatewayHttpResponsesConfig;
+  modelProxyEnabled?: boolean;
+  modelProxyConfig?: import("../config/types.gateway.js").GatewayHttpModelProxyConfig;
   strictTransportSecurityHeader?: string;
   handleHooksRequest: HooksRequestHandler;
   handlePluginRequest?: PluginHttpRequestHandler;
@@ -512,6 +524,8 @@ export function createGatewayHttpServer(opts: {
     openAiChatCompletionsConfig,
     openResponsesEnabled,
     openResponsesConfig,
+    modelProxyEnabled = false,
+    modelProxyConfig,
     strictTransportSecurityHeader,
     handleHooksRequest,
     handlePluginRequest,
@@ -688,6 +702,16 @@ export function createGatewayHttpServer(opts: {
               trustedProxies,
               allowRealIpFallback,
               rateLimiter,
+            }),
+        });
+      }
+      if (modelProxyEnabled && isModelProxyChatCompletionsPath(scopedRequestPath)) {
+        requestStages.push({
+          name: "model-proxy",
+          run: async () =>
+            (await getModelProxyHttpModule()).handleModelProxyChatCompletionsHttpRequest(req, res, {
+              config: modelProxyConfig,
+              fullConfig: configSnapshot,
             }),
         });
       }

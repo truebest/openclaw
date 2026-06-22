@@ -20,6 +20,7 @@ export async function createGatewayRuntimeStateForTest(
     controlUiBasePath: "/",
     openAiChatCompletionsEnabled: false,
     openResponsesEnabled: false,
+    modelProxyEnabled: false,
     resolvedAuth: {} as never,
     getResolvedAuth: () => ({}) as never,
     hooksConfig: () => null,

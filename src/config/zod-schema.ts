@@ -1161,6 +1161,35 @@ export const OpenClawSchema = z
                   })
                   .strict()
                   .optional(),
+                modelProxy: z
+                  .object({
+                    enabled: z.boolean().optional(),
+                    token: SecretInputSchema.optional().register(sensitive),
+                    agentId: z.string().optional(),
+                    defaultProvider: z.string().optional(),
+                    defaultModel: z.string().optional(),
+                    routes: z
+                      .record(
+                        z.string(),
+                        z.union([
+                          z.string(),
+                          z
+                            .object({
+                              target: z.string().optional(),
+                              provider: z.string().optional(),
+                              model: z.string().optional(),
+                              preferredProfile: z.string().optional(),
+                            })
+                            .strict(),
+                        ]),
+                      )
+                      .optional(),
+                    preferredProfile: z.string().optional(),
+                    allowedModels: z.array(z.string()).optional(),
+                    maxBodyBytes: z.number().int().positive().optional(),
+                  })
+                  .strict()
+                  .optional(),
               })
               .strict()
               .optional(),

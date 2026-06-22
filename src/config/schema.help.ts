@@ -582,6 +582,24 @@ export const FIELD_HELP: Record<string, string> = {
     "Max HTTP redirects allowed when fetching `image_url` URLs (default: 3).",
   "gateway.http.endpoints.chatCompletions.images.timeoutMs":
     "Timeout in milliseconds for `image_url` URL fetches (default: 10000).",
+  "gateway.http.endpoints.modelProxy.enabled":
+    "Enable the internal raw OpenAI-compatible model proxy under `/llm/v1` (default: false). This is for trusted worker gateways, not public clients.",
+  "gateway.http.endpoints.modelProxy.token":
+    "Bearer token required by the internal model proxy. Use a SecretRef such as env:default:LLM_HUB_TOKEN; do not reuse the full gateway operator token.",
+  "gateway.http.endpoints.modelProxy.agentId":
+    "Agent id whose auth store and model catalog are used by the model proxy (default: main).",
+  "gateway.http.endpoints.modelProxy.defaultProvider":
+    "Provider used to normalize bare request model names for the model proxy (default: openai).",
+  "gateway.http.endpoints.modelProxy.defaultModel":
+    "Optional provider/model ref used when a model proxy request omits `model`.",
+  "gateway.http.endpoints.modelProxy.routes":
+    "Optional routing table for exposed model names. Keys are request model names or provider/model refs; values are upstream provider/model refs or route objects with target/provider/model/preferredProfile.",
+  "gateway.http.endpoints.modelProxy.preferredProfile":
+    "Optional auth profile id preferred when the model proxy resolves provider credentials.",
+  "gateway.http.endpoints.modelProxy.allowedModels":
+    'Exact provider/model refs allowed through the model proxy, for example ["openai/gpt-5.5"]. Leave unset to allow configured models.',
+  "gateway.http.endpoints.modelProxy.maxBodyBytes":
+    "Max request body size in bytes for `/llm/v1/chat/completions` (default: 2MB).",
   "gateway.reload.mode":
     'Controls how config edits are applied: "off" ignores live edits, "restart" always restarts, "hot" applies in-process, and "hybrid" tries hot then restarts if required. Keep "hybrid" for safest routine updates.',
   "gateway.reload.debounceMs": "Debounce window (ms) before applying config changes.",

@@ -388,11 +388,78 @@ export type GatewayHttpResponsesImagesConfig = {
   timeoutMs?: number;
 };
 
+export type GatewayHttpModelProxyConfig = {
+  /**
+   * If false, the Gateway will not serve raw model proxy endpoints under `/llm/v1`.
+   * Default: false when absent.
+   */
+  enabled?: boolean;
+  /**
+   * Bearer token required by the model proxy endpoint. This is intentionally
+   * separate from gateway.auth.token because model proxy callers should not
+   * receive full operator credentials.
+   */
+  token?: SecretInput;
+  /**
+   * Agent id whose auth store and model catalog are used by the proxy.
+   * Default: main.
+   */
+  agentId?: string;
+  /**
+   * Default provider for bare request model names. Default: openai.
+   */
+  defaultProvider?: string;
+  /**
+   * Optional model ref used when the request omits `model`.
+   */
+  defaultModel?: string;
+  /**
+   * Optional routing table for exposed model names. Keys are request model names
+   * or provider/model refs; values resolve to upstream provider/model refs.
+   */
+  routes?: Record<string, string | GatewayHttpModelProxyRouteConfig>;
+  /**
+   * Optional preferred auth profile id for provider auth resolution.
+   */
+  preferredProfile?: string;
+  /**
+   * Exact allowlist of model refs accepted by the proxy, for example
+   * ["openai/gpt-5.5"]. Bare model ids are normalized with defaultProvider.
+   */
+  allowedModels?: string[];
+  /**
+   * Max request body size in bytes for `/llm/v1/chat/completions`.
+   * Default: 2MB.
+   */
+  maxBodyBytes?: number;
+};
+
+export type GatewayHttpModelProxyRouteConfig = {
+  /**
+   * Upstream provider/model ref. If set, this wins over provider/model fields.
+   */
+  target?: string;
+  /**
+   * Upstream provider. Defaults to modelProxy.defaultProvider.
+   */
+  provider?: string;
+  /**
+   * Upstream model id, or provider/model ref when provider is omitted.
+   */
+  model?: string;
+  /**
+   * Optional auth profile id for this route.
+   */
+  preferredProfile?: string;
+};
+
 export type GatewayHttpEndpointsConfig = {
   /** OpenAI-compatible chat completions endpoint controls. */
   chatCompletions?: GatewayHttpChatCompletionsConfig;
   /** OpenResponses-compatible responses endpoint controls. */
   responses?: GatewayHttpResponsesConfig;
+  /** Raw internal OpenAI-compatible model proxy endpoint controls. */
+  modelProxy?: GatewayHttpModelProxyConfig;
 };
 
 export type GatewayHttpSecurityHeadersConfig = {
